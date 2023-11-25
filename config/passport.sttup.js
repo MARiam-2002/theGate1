@@ -14,7 +14,7 @@ passport.deserializeUser(async (id, done) => {
 passport.use(
   new GoogleStrategy(
     {
-      callbackURL: "https://the-gate-1.vercel.app/auth/google/redirect",
+      callbackURL: "https://the-gate1-mariam-2002.vercel.app/auth/google/redirect",
       clientID: process.env.CLIENTID,
       clientSecret: process.env.CLIENTSECRET,
       scope: ["profile", "email"],

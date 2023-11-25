@@ -38,8 +38,8 @@ router.get("/logout", (req, res, next) => {
 router.get(
   "/google/redirect",
   passport.authenticate("google", {
-    successRedirect: "https://the-gate-1.vercel.app/auth/login/success",
-    failureRedirect: "https://the-gate-1.vercel.app/auth/login/failed",
+    successRedirect: "https://the-gate1-mariam-2002.vercel.app/auth/login/success",
+    failureRedirect: "https://the-gate1-mariam-2002.vercel.app/auth/login/failed",
   })
 );
 router.post(
