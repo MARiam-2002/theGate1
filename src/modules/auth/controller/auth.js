@@ -12,7 +12,7 @@ import randomstring from "randomstring";
 import cloudinary from "../../../utils/cloud.js";
 import cartModel from "../../../../DB/models/cart.model.js";
 
-export const register = asyncHandler(async (req, res, next) => {
+export const register = async (req, res, next) => {
   const isUser = await userModel.findOne({ email: req.body.email });
   if (isUser) {
     return next(new Error("email already registered !", { cause: 409 }));
@@ -25,9 +25,11 @@ export const register = asyncHandler(async (req, res, next) => {
   const activationCode = crypto.randomBytes(64).toString("hex");
   const user = await userModel.create({
     ...req.body,
-    workingDays: JSON.parse(req.body.workingDays),
-    socialLink: JSON.parse(req.body.socialLink),
-    workingHours: JSON.parse(req.body.workingHours),
+    workingDays: req.body.workingDays ? JSON.parse(req.body.workingDays) : [],
+    socialLink: req.body.socialLink ? JSON.parse(req.body.socialLink) : {},
+    workingHours: req.body.workingHours
+      ? JSON.parse(req.body.workingHours)
+      : [],
     password: hashPassword,
     activationCode,
   });
@@ -67,11 +69,17 @@ export const register = asyncHandler(async (req, res, next) => {
       subject: "Activate Account",
       html: signupTemp(link, true),
     });
-
+    const newUser = await userModel
+      .findOne({ email: user.email })
+      .select("-workingHours -workingDays -activationCode");
     return isSent
       ? res
           .status(200)
-          .json({ success: true, message: "Please review Your email!" ,user})
+          .json({
+            success: true,
+            message: "Please review Your email!",
+            newUser,
+          })
       : next(new Error("something went wrong!", { cause: 400 }));
   } else if (user.role === "admin") {
     const user = await userModel.findOneAndUpdate(
@@ -87,10 +95,10 @@ export const register = asyncHandler(async (req, res, next) => {
     });
     await cartModel.create({ user: user._id });
     return isSent
-      ? res.status(200).json({ success: true, message: "done!",user })
+      ? res.status(200).json({ success: true, message: "done!", user })
       : next(new Error("something went wrong!", { cause: 400 }));
   }
-});
+};
 
 export const activationAccount = asyncHandler(async (req, res, next) => {
   const user = await userModel.findOneAndUpdate(
