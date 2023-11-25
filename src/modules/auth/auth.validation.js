@@ -20,7 +20,7 @@ export const registerSchema = joi
     gender: joi.string().valid("Female", "male").required(),
     address: joi.string().min(10).max(25).required(),
     title: joi.string(),
-    Region: joi.string().required(),
+    Region: joi.string(),
     country: joi.string().required(),
     phone: joi
       .string()
@@ -87,8 +87,8 @@ export const registerSchema = joi
         return true;
       }
     }),
-    Longitude: joi.string(),
-    Latitude: joi.string(),
+    Longitude: joi.string().required(),
+    Latitude: joi.string().required(),
     size: joi.number().positive().required(),
     path: joi.string().required(),
     filename: joi.string().required(),
