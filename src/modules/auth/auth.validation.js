@@ -28,10 +28,9 @@ export const registerSchema = joi
       .required(),
     whatsAppNumber: joi
       .string()
-      .regex(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)
-      .required(),
+      .regex(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/),
     password: joi.string().required(),
-    description: joi.string().required(),
+    description: joi.string(),
     confirmPassword: joi.string().valid(joi.ref("password")).required(),
     workingDays: joi.string().custom(arrayParsing),
     workingHours: joi.string().custom((value, helper) => {
