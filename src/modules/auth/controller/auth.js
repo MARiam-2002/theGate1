@@ -14,10 +14,10 @@ import cartModel from "../../../../DB/models/cart.model.js";
 
 export const register = asyncHandler(async (req, res, next) => {
   const isUser = await userModel.findOne({ email: req.body.email });
-  if (isUser.role != "user") {
+  if (isUser) {
     return next(new Error("email already registered !", { cause: 409 }));
   }
-  
+
   const hashPassword = bcrypt.hashSync(
     req.body.password,
     +process.env.SALT_ROUND
@@ -71,7 +71,7 @@ export const register = asyncHandler(async (req, res, next) => {
     return isSent
       ? res
           .status(200)
-          .json({ success: true, message: "Please review Your email!" })
+          .json({ success: true, message: "Please review Your email!" ,user})
       : next(new Error("something went wrong!", { cause: 400 }));
   } else if (user.role === "admin") {
     const user = await userModel.findOneAndUpdate(
@@ -87,7 +87,7 @@ export const register = asyncHandler(async (req, res, next) => {
     });
     await cartModel.create({ user: user._id });
     return isSent
-      ? res.status(200).json({ success: true, message: "done!" })
+      ? res.status(200).json({ success: true, message: "done!",user })
       : next(new Error("something went wrong!", { cause: 400 }));
   }
 });
