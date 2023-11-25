@@ -62,7 +62,7 @@ export const register = async (req, res, next) => {
     { profileImage: { url: secure_url, id: public_id } }
   );
 
-  const link = `http://localhost:${process.env.PORT}/auth/confirmEmail/${activationCode}`;
+  const link = `https://the-gate1.vercel.app/auth/confirmEmail/${activationCode}`;
   if (user.role === "visitor") {
     const isSent = await sendEmail({
       to: user.email,
